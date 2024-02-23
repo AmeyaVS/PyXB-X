@@ -14,7 +14,7 @@ import sys
 # but the rightmost number will be incremented with each patch.
 version = "1.2.6.2"
 
-# Require Python 2.6 or higher or Python 3.5 or higher
+# Require Python 3.5 or higher
 if (sys.version_info[0] == 3) and sys.version_info[:2] < (3, 5):
     raise ValueError(
         """PyXB-X requires:

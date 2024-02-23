@@ -11,7 +11,7 @@ http://code.activestate.com/recipes.  At this time, all such code is
 licensed under PSF (http://docs.python.org/license.html).
 
 pyxb/utils/six.py is a (modified) version of the
-[six](https://pypi.python.org/pypi/six) module supporting Python 2/3
+[six](https://pypi.python.org/pypi/six) module supporting Python 3
 Compatible Source.  It is copyright Benjamin Peterson and is released
 under the MIT license
 (https://bitbucket.org/gutworth/six/src/320691c3ccadeb64bb8a368ef9d39cb2a9a44770/LICENSE?at=default).
