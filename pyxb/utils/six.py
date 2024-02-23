@@ -33,7 +33,6 @@ __version__ = "1.9.0"
 
 # Useful for very coarse version differentiation.
 PY3 = sys.version_info[0] == 3
-PY34 = sys.version_info[0:2] >= (3, 4)
 
 if PY3:
     string_types = (str,)
@@ -288,9 +287,7 @@ _moved_attributes = [
     MovedAttribute("getcwd", "os", "os", "getcwdu", "getcwd"),
     MovedAttribute("getcwdb", "os", "os", "getcwd", "getcwdb"),
     MovedAttribute("range", "__builtin__", "builtins", "xrange", "range"),
-    MovedAttribute(
-        "reload_module", "__builtin__", "importlib" if PY34 else "imp", "reload"
-    ),
+    MovedAttribute("reload_module", "__builtin__", "importlib", "imp"),
     MovedAttribute("reduce", "__builtin__", "functools"),
     MovedAttribute("shlex_quote", "pipes", "shlex", "quote"),
     MovedAttribute("StringIO", "StringIO", "io"),
