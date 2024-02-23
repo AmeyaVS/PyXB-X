@@ -25,16 +25,8 @@ class DeconfictSymbolsTtest(unittest.TestCase):
         self.assertEqual(3, len(DST_sub._ReservedSymbols))
 
 
-if six.PY3:
-
-    def qu(s):
-        return '"' + s.replace('"', '\\"') + '"'
-
-else:
-
-    def qu(s):
-        s = unicode(s.replace(r"\\", r"\\\\"), "unicode_escape")
-        return six.u('u"') + s.replace('"', '\\"') + '"'
+def qu(s):
+    return '"' + s.replace('"', '\\"') + '"'
 
 
 class BasicTest(unittest.TestCase):

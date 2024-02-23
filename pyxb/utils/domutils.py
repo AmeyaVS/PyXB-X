@@ -67,7 +67,7 @@ def StringToDOM(xml_text, **kw):
     xmlt = xml_text
     if pyxb.XMLStyle_minidom == pyxb._XMLStyle:
         parser = pyxb.utils.saxutils.make_parser()
-        if six.PY3 and isinstance(xmlt, six.binary_type):
+        if isinstance(xmlt, six.binary_type):
             xmlt = xmlt.decode(pyxb._InputEncoding)
         return xml.dom.minidom.parseString(xmlt, parser)
     return pyxb.utils.saxdom.parseString(xml_text, **kw)
