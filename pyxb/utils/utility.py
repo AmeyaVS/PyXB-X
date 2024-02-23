@@ -829,15 +829,6 @@ def DataFromURI(uri, archive_directory=None):
             stream = urlopen(uri)
         except Exception as e:
             exc = e
-        if (stream is None) and six.PY2:
-            import urllib
-
-            try:
-                stream = urllib.urlopen(uri)
-                exc = None
-            except:
-                # Prefer urllib exception
-                pass
     if stream is None:
         # No go as URI; give file a chance
         try:

@@ -400,8 +400,6 @@ class _TypeBinding_mixin(utility.Locatable_mixin):
             return value
         value_type = type(value)
         # All string-based PyXB binding types use unicode, not str
-        if six.PY2 and str == value_type:
-            value_type = six.text_type
 
         # See if we got passed a Python value which needs to be "downcasted"
         # to the _TypeBinding_mixin version.
@@ -1504,11 +1502,6 @@ class STD_list(simpleTypeDefinition, six.list_type):
             super(STD_list, self).__setitem__(key, self.__convertMany(value))
         else:
             super(STD_list, self).__setitem__(key, self._ValidatedItem(value))
-
-    if six.PY2:
-
-        def __setslice__(self, start, end, values):
-            super(STD_list, self).__setslice__(start, end, self.__convertMany(values))
 
     def __contains__(self, item):
         return super(STD_list, self).__contains__(self._ValidatedItem(item))

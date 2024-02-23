@@ -510,7 +510,6 @@ class CF_pattern(ConstrainingFacet, _CollectionFacet_mixin):
         return False
 
 
-@six.python_2_unicode_compatible
 class _EnumerationElement(object):
     """This class represents individual values that appear within a
     L{CF_enumeration} collection."""

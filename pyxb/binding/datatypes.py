@@ -103,7 +103,8 @@ _PrimitiveDatatypes.append(string)
 
 # It is illegal to subclass the bool type in Python, so we subclass
 # int instead.
-@six.python_2_unicode_compatible
+
+
 class boolean(
     basis.simpleTypeDefinition, six.int_type, basis._NoNullaryNonNillableNew_mixin
 ):

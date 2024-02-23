@@ -400,7 +400,6 @@ def ResolveSiblingNamespaces(sibling_namespaces):
         last_state = state
 
 
-@six.python_2_unicode_compatible
 class NamespaceContext(object):
     """Records information associated with namespaces at a DOM node."""
 

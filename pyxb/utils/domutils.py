@@ -67,11 +67,7 @@ def StringToDOM(xml_text, **kw):
     xmlt = xml_text
     if pyxb.XMLStyle_minidom == pyxb._XMLStyle:
         parser = pyxb.utils.saxutils.make_parser()
-        # minidom.parseString is broken.  In Python 2, this means don't
-        # feed it unicode.  In Python 3 this means don't feed it bytes.
-        if six.PY2 and not isinstance(xmlt, six.binary_type):
-            xmlt = xmlt.encode(pyxb._InputEncoding)
-        elif six.PY3 and isinstance(xmlt, six.binary_type):
+        if six.PY3 and isinstance(xmlt, six.binary_type):
             xmlt = xmlt.decode(pyxb._InputEncoding)
         return xml.dom.minidom.parseString(xmlt, parser)
     return pyxb.utils.saxdom.parseString(xml_text, **kw)

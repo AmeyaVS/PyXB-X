@@ -6,7 +6,6 @@ from pyxb.utils import six
 import raw.ipo as raw_ipo
 
 
-@six.python_2_unicode_compatible
 class USAddress(raw_ipo.USAddress):
     def __str__(self):
         return (
