@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 import logging
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     logging.basicConfig()
 _log = logging.getLogger(__name__)
 from pyxb.utils import unicode, xmlre, six
@@ -9,189 +10,211 @@ import re
 
 import unittest
 
-class TestXMLRE (unittest.TestCase):
+
+class TestXMLRE(unittest.TestCase):
     def assertMatches(self, xml_pattern, value):
-        '''Helper function to assert a value matches an XSD regexp pattern.'''
+        """Helper function to assert a value matches an XSD regexp pattern."""
         py_pattern = xmlre.XMLToPython(xml_pattern)
         compiled = re.compile(py_pattern)
         mo = compiled.match(value)
-        self.assertTrue(mo is not None, 'XML re %r Python %r should match %r' % (xml_pattern, py_pattern, value))
+        self.assertTrue(
+            mo is not None,
+            "XML re %r Python %r should match %r" % (xml_pattern, py_pattern, value),
+        )
 
     def assertNoMatch(self, xml_pattern, value):
-        '''Helper function to assert a value does not matche an XSD regexp
-        pattern.'''
+        """Helper function to assert a value does not matche an XSD regexp
+        pattern."""
         py_pattern = xmlre.XMLToPython(xml_pattern)
         compiled = re.compile(py_pattern)
         mo = compiled.match(value)
-        self.assertTrue(mo is None, 'XML re %r Python %r should not match %r' % (xml_pattern, py_pattern, value))
+        self.assertTrue(
+            mo is None,
+            "XML re %r Python %r should not match %r"
+            % (xml_pattern, py_pattern, value),
+        )
 
-    def testWildcardEscape (self):
-        (charset, position) = xmlre._MatchAtom('.', 0)
+    def testWildcardEscape(self):
+        (charset, position) = xmlre._MatchAtom(".", 0)
         self.assertEqual(charset, unicode.WildcardEsc.asPattern())
         self.assertEqual(position, 1)
 
-    def testSingleCharEscapes (self):
+    def testSingleCharEscapes(self):
         # 17 chars recognized as escapes
         self.assertEqual(len(unicode.SingleCharEsc), 17)
 
-        (charset, position) = xmlre._MatchAtom(r'\t', 0)
-        self.assertEqual(charset, '\t')
+        (charset, position) = xmlre._MatchAtom(r"\t", 0)
+        self.assertEqual(charset, "\t")
         self.assertEqual(2, position)
 
-        (charset, position) = xmlre._MatchAtom(r'\?', 0)
-        self.assertEqual(charset, '\\?')
+        (charset, position) = xmlre._MatchAtom(r"\?", 0)
+        self.assertEqual(charset, "\\?")
         self.assertEqual(2, position)
 
-        (charset, position) = xmlre._MatchAtom(r'\\', 0)
-        self.assertEqual(charset, '\\\\')
+        (charset, position) = xmlre._MatchAtom(r"\\", 0)
+        self.assertEqual(charset, "\\\\")
         self.assertEqual(2, position)
 
-    def testMultiCharEscapes (self):
+    def testMultiCharEscapes(self):
         # 5*2 chars recognized as escapes
         self.assertEqual(len(unicode.MultiCharEsc), 10)
-        (charset, position) = xmlre._MatchAtom(r'\s', 0)
-        self.assertEqual(charset, '[\t-\n\r ]')
+        (charset, position) = xmlre._MatchAtom(r"\s", 0)
+        self.assertEqual(charset, "[\t-\n\r ]")
         self.assertEqual(2, position)
 
-    def testMatchCharProperty (self):
+    def testMatchCharProperty(self):
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, r"\pL", 0)
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, r"\p{L", 0)
         text = r"\p{L}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.PropertyMap['L'].asPattern())
+        self.assertEqual(charset, unicode.PropertyMap["L"].asPattern())
         text = r"\p{IsCyrillic}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.BlockMap['Cyrillic'].asPattern())
+        self.assertEqual(charset, unicode.BlockMap["Cyrillic"].asPattern())
 
-    def testCharProperty (self):
-        text = r'\p{D}'
+    def testCharProperty(self):
+        text = r"\p{D}"
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, text, 0)
-        text = r'\P{D}'
+        text = r"\P{D}"
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, text, 0)
-        text = r'\p{N}'
+        text = r"\p{N}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.PropertyMap['N'].asPattern())
-        text = r'\P{N}'
+        self.assertEqual(charset, unicode.PropertyMap["N"].asPattern())
+        text = r"\P{N}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.PropertyMap['N'].negate().asPattern())
-        text = r'\p{Sm}'
+        self.assertEqual(charset, unicode.PropertyMap["N"].negate().asPattern())
+        text = r"\p{Sm}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.PropertyMap['Sm'].asPattern())
+        self.assertEqual(charset, unicode.PropertyMap["Sm"].asPattern())
 
-    def testCharBlock (self):
-        text = r'\p{IsArrows}'
+    def testCharBlock(self):
+        text = r"\p{IsArrows}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.BlockMap['Arrows'].asPattern())
-        text = r'\P{IsArrows}'
+        self.assertEqual(charset, unicode.BlockMap["Arrows"].asPattern())
+        text = r"\P{IsArrows}"
         (charset, position) = xmlre._MatchAtom(text, 0)
         self.assertEqual(position, len(text))
-        self.assertEqual(charset, unicode.BlockMap['Arrows'].negate().asPattern())
+        self.assertEqual(charset, unicode.BlockMap["Arrows"].negate().asPattern())
 
-        text = r'\p{IsWelsh}'
+        text = r"\p{IsWelsh}"
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, text, 0)
-        text = r'\P{IsWelsh}'
+        text = r"\P{IsWelsh}"
         self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, text, 0)
 
-    def testCharGroup (self):
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, '[]', 0)
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, '[A--]', 0)
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, '[A--]', 0)
-        text = r'[A-Z]'
-        #(charset, position) = xmlre._MatchAtom(text, 0)
-        #self.assertEqual(position, len(text))
-        #self.assertEqual(charset, unicode.CodePointSet((ord('A'), ord('Z'))))
+    def testCharGroup(self):
+        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, "[]", 0)
+        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, "[A--]", 0)
+        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchAtom, "[A--]", 0)
+        text = r"[A-Z]"
+        # (charset, position) = xmlre._MatchAtom(text, 0)
+        # self.assertEqual(position, len(text))
+        # self.assertEqual(charset, unicode.CodePointSet((ord('A'), ord('Z'))))
 
-    def testCharOrSCE (self):
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, '[', 0)
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, ']', 0)
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, '-', 0)
-        (charset, position) = xmlre._MatchCharClassEsc(r'\t', 0)
+    def testCharOrSCE(self):
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, "[", 0
+        )
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, "]", 0
+        )
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassEsc, "-", 0
+        )
+        (charset, position) = xmlre._MatchCharClassEsc(r"\t", 0)
         self.assertEqual(2, position)
         self.assertEqual(unicode.CodePointSet("\t"), charset)
 
-    def testMatchPosCharGroup (self):
-        text = 'A]'
+    def testMatchPosCharGroup(self):
+        text = "A]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 1)
-        self.assertEqual(charset, unicode.CodePointSet(ord('A')))
-        text = r'\n]'
+        self.assertEqual(charset, unicode.CodePointSet(ord("A")))
+        text = r"\n]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 2)
         self.assertEqual(charset, unicode.CodePointSet(10))
-        text = r'-]'
+        text = r"-]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 1)
-        self.assertEqual(charset, unicode.CodePointSet(ord('-')))
-        text = 'A-Z]'
+        self.assertEqual(charset, unicode.CodePointSet(ord("-")))
+        text = "A-Z]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 3)
-        self.assertEqual(charset, unicode.CodePointSet((ord('A'), ord('Z'))))
-        text = r'\t-\r]'
+        self.assertEqual(charset, unicode.CodePointSet((ord("A"), ord("Z"))))
+        text = r"\t-\r]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 5)
         self.assertEqual(charset, unicode.CodePointSet((9, 13)))
-        text = r'\t-A]'
+        text = r"\t-A]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 4)
-        self.assertEqual(charset, unicode.CodePointSet((9, ord('A'))))
-        text = r'Z-\]]'
+        self.assertEqual(charset, unicode.CodePointSet((9, ord("A"))))
+        text = r"Z-\]]"
         (charset, has_sub, position) = xmlre._MatchPosCharGroup(text, 0)
         self.assertEqual(position, 4)
-        self.assertEqual(charset, unicode.CodePointSet((ord('Z'), ord(']'))))
-        text = 'Z-A]'
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchPosCharGroup, text, 0)
+        self.assertEqual(charset, unicode.CodePointSet((ord("Z"), ord("]"))))
+        text = "Z-A]"
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchPosCharGroup, text, 0
+        )
 
-    def testMatchCharClassExpr (self):
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, 'missing open', 0)
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, '[missing close', 0)
-        first_five = unicode.CodePointSet( (ord('A'), ord('E')) )
-        text = r'[ABCDE]'
+    def testMatchCharClassExpr(self):
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, "missing open", 0
+        )
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, "[missing close", 0
+        )
+        first_five = unicode.CodePointSet((ord("A"), ord("E")))
+        text = r"[ABCDE]"
         (charset, position) = xmlre._MatchCharClassExpr(text, 0)
         self.assertEqual(position, len(text))
         self.assertEqual(charset, first_five)
-        text = r'[^ABCDE]'
+        text = r"[^ABCDE]"
         (charset, position) = xmlre._MatchCharClassExpr(text, 0)
         self.assertEqual(position, len(text))
         self.assertEqual(charset.negate(), first_five)
-        text = r'[A-Z-[GHI]]'
-        expected = unicode.CodePointSet( (ord('A'), ord('Z')) )
-        expected.subtract( (ord('G'), ord('I') ))
+        text = r"[A-Z-[GHI]]"
+        expected = unicode.CodePointSet((ord("A"), ord("Z")))
+        expected.subtract((ord("G"), ord("I")))
         (charset, position) = xmlre._MatchCharClassExpr(text, 0)
         self.assertEqual(position, len(text))
         self.assertEqual(charset, expected)
-        text = r'[\p{L}-\p{Lo}]'
-        self.assertRaises(xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, text, 0)
-        text = r'[\p{L}-[\p{Lo}]]'
+        text = r"[\p{L}-\p{Lo}]"
+        self.assertRaises(
+            xmlre.RegularExpressionError, xmlre._MatchCharClassExpr, text, 0
+        )
+        text = r"[\p{L}-[\p{Lo}]]"
         (charset, position) = xmlre._MatchCharClassExpr(text, 0)
-        expected = unicode.CodePointSet(unicode.PropertyMap['L'])
-        expected.subtract(unicode.PropertyMap['Lo'])
+        expected = unicode.CodePointSet(unicode.PropertyMap["L"])
+        expected.subtract(unicode.PropertyMap["Lo"])
         self.assertEqual(position, len(text))
         self.assertEqual(charset, expected)
 
-    def testXMLToPython (self):
-        self.assertEqual(r'^(?:123)$', xmlre.XMLToPython('123'))
+    def testXMLToPython(self):
+        self.assertEqual(r"^(?:123)$", xmlre.XMLToPython("123"))
         # Note that single-char escapes in the expression are
         # no longer converted to character classes.
-        self.assertEqual('^(?:Why[ ]not\\?)$', xmlre.XMLToPython(r'Why[ ]not\?'))
+        self.assertEqual("^(?:Why[ ]not\\?)$", xmlre.XMLToPython(r"Why[ ]not\?"))
 
-    def testRegularExpressions (self):
-        text = r'[\i-[:]][\c-[:]]*'
+    def testRegularExpressions(self):
+        text = r"[\i-[:]][\c-[:]]*"
         compiled_re = re.compile(xmlre.XMLToPython(text))
-        self.assertTrue(compiled_re.match('identifier'))
-        self.assertFalse(compiled_re.match('0bad'))
-        self.assertFalse(compiled_re.match(' spaceBad'))
-        self.assertFalse(compiled_re.match('qname:bad'))
-        text = '\\i\\c*'
+        self.assertTrue(compiled_re.match("identifier"))
+        self.assertFalse(compiled_re.match("0bad"))
+        self.assertFalse(compiled_re.match(" spaceBad"))
+        self.assertFalse(compiled_re.match("qname:bad"))
+        text = "\\i\\c*"
         text_py = xmlre.XMLToPython(text)
         compiled_re = re.compile(text_py)
-        self.assertTrue(compiled_re.match('identifier'))
-        self.assertTrue(compiled_re.match('_underscore'))
+        self.assertTrue(compiled_re.match("identifier"))
+        self.assertTrue(compiled_re.match("_underscore"))
 
     def testTrivialLiteral(self):
         # Simplest sanity check for assertMatches / assertNoMatch
@@ -465,10 +488,11 @@ class TestXMLRE (unittest.TestCase):
         self.assertMatches("foo\\\\bar", "foo\\bar")
 
     def testAlternation(self):
-        self.assertMatches("[0-9]{3}|", "123");
-        self.assertMatches("[0-9]{3}|", "");
-        self.assertNoMatch("[0-9]{3}|", "12");
-        self.assertNoMatch("[0-9]{3}|", "1234");
+        self.assertMatches("[0-9]{3}|", "123")
+        self.assertMatches("[0-9]{3}|", "")
+        self.assertNoMatch("[0-9]{3}|", "12")
+        self.assertNoMatch("[0-9]{3}|", "1234")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

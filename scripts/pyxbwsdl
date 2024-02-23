@@ -6,7 +6,7 @@
 # http://soap.amazon.com/schemas2/AmazonWebServices.wsdl
 # http://api.google.com/GoogleSearch.wsdl
 
-from __future__ import print_function
+
 import sys
 import xml.dom.minidom
 from pyxb.utils.six.moves.urllib.request import urlopen

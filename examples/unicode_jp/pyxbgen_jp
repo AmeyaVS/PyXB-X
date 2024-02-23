@@ -3,7 +3,7 @@
 # Stripped down version of pyxbgen incorporating Japanese-to-Romaji
 # transliteration provided by Hiroaki Itoh.
 
-from __future__ import print_function
+
 import pyxb.xmlschema
 import pyxb.binding.generate
 import pyxb.utils.utility
